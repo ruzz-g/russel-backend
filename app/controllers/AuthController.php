@@ -129,19 +129,21 @@ class AuthController extends Controller
     }
 
     /**
-     * POST /api/auth/logout   (requires Bearer access token)
-     * Body: { "refresh_token": "..." }
+     * POST /api/auth/logout
+     * Body: { "refresh_token": "..." } (or omit to revoke all with Bearer access token)
      */
     public function logout()
     {
         $this->api->require_method('POST');
-        $payload = $this->api->require_jwt();
-
         $in    = $this->json_input();
         $token = (string) ($in['refresh_token'] ?? '');
         if ($token !== '') {
+            if (!$this->api->validate_jwt($token, 'refresh')) {
+                $this->api->respond_error('Invalid refresh token', 401);
+            }
             $this->api->revoke_refresh_token($token);
         } else {
+            $payload = $this->api->require_jwt();
             // No token supplied: revoke every refresh token of this user.
             $this->db->raw('DELETE FROM refresh_tokens WHERE user_id = ?', [(int) $payload['sub']]);
         }
