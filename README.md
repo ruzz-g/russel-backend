@@ -117,13 +117,15 @@ Where things are:
 | `DB_SSL_CA_CERT` | content of Aiven's CA certificate |
 | `JWT_SECRET` | 64 random hex characters (`php lava jwt:generate --show`) |
 | `REFRESH_TOKEN_KEY` | a **different** 64-char value |
-| `ALLOW_ORIGIN` | your frontend URL, e.g. `https://my-products.onrender.com` |
+| `ALLOW_ORIGIN` | comma-separated exact origins, e.g. `https://my-products.onrender.com,https://api-tester.marasigan.dev` |
 | `MIGRATION_ENABLED` | `false` |
 
 4. Deploy. Your **Render API URL** is `https://<service>.onrender.com` — test `GET /api/products` (should be `401`).
 5. Use that URL as `VITE_API_URL` in the frontend project.
 
 > Free Render services sleep after inactivity; the first request can take ~30–60 s.
+
+Use the exact frontend origin with no trailing slash. Include `https://api-tester.marasigan.dev` only if you want to call the API from that browser-based tester; remove it when you no longer need it.
 
 ---
 
