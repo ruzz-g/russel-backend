@@ -1,0 +1,7 @@
+.env
+ca.pem
+.git
+.gitignore
+runtime/cache
+*.log
+node_modules
